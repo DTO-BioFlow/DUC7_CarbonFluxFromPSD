@@ -16,7 +16,16 @@ library(maps)
 R_EARTH <- 6371000 # Earth radius in meters
 DAYS_IN_MONTH <- c(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
-# Load the pre-trained model
+# Automatically download the model (not in the container because too heavy)
+if (!file.exists("data/model_pack.rds")) {
+  dir.create("data", showWarnings = FALSE)
+  download.file(
+    url = "https://minio.dive.edito.eu/oidc-margauxperhir1/data/model_pack.rds",
+    destfile = "data/model_pack.rds",
+    mode = "wb"
+  )
+}
+
 MODEL_PACK <- readRDS("data/model_pack.rds")
 
 # Read the NetCDF file
@@ -227,22 +236,18 @@ server <- function(input, output, session) {
   
   model_res <- eventReactive(input$btn_run, {
     req(input$selected_months)
-    validate(
-      need(input$target_depth >= 100 && input$target_depth <= 1500, "Target depth must be between 100 and 1500 m."),
-      need(input$n_boot >= 10, "Bootstrap iterations must be >= 10.")
-    )
+    validate(need(input$target_depth >= 100 && input$target_depth <= 1500, "Target depth must be between 100 and 1500 m."),
+             need(input$n_boot >= 10, "Bootstrap iterations must be >= 10."))
     
     sel_months <- as.numeric(input$selected_months)
     
     withProgress(message = "Reading NetCDF coefficients...", value = 0.2, {
       
       # 1. Download coefficients from the NetCDF file
-      coefs_df <- load_coefs_from_nc(
-        nc_path = "data/argoecokiko_predictions.nc",
-        months_sel = sel_months,
-        lat_range = input$lat_range,
-        lon_range = input$lon_range
-      )
+      coefs_df <- load_coefs_from_nc(nc_path = "data/argoecokiko_predictions.nc",
+                                     months_sel = sel_months,
+                                     lat_range = input$lat_range,
+                                     lon_range = input$lon_range)
       
       validate(need(nrow(coefs_df) > 0, "No data available in the selected spatial region and months."))
       

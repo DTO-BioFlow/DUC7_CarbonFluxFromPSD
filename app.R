@@ -61,10 +61,8 @@ load_coefs_from_nc <- function(nc_path, months_sel, lat_range, lon_range) {
   df_long <- df_raw %>%
     pivot_longer(cols = -c(longitude, latitude), names_to = "var_month", values_to = "predictedvalue") %>%
     filter(!is.na(predictedvalue) & predictedvalue != -9999) %>%
-    mutate(
-      term  = sub("_month_.*", "", var_month),
-      month = as.numeric(sub(".*_month_", "", var_month))
-    ) %>%
+    mutate(term = sub("_month_.*", "", var_month),
+           month = as.numeric(sub(".*_month_", "", var_month))) %>%
     dplyr::select(longitude, latitude, month, term, predictedvalue)
   
   return(df_long)
@@ -73,12 +71,10 @@ load_coefs_from_nc <- function(nc_path, months_sel, lat_range, lon_range) {
 # Compute global POC flux [Pg C year-1]
 calc_global_flux_bootstrap <- function(preds_log_matrix, df_spatial) {
   weights <- df_spatial %>%
-    mutate(
-      lat_rad = latitude * pi / 180,
-      area_m2 = (R_EARTH^2) * (pi / 180)^2 * cos(lat_rad),
-      n_days  = DAYS_IN_MONTH[month],
-      w_cell  = (area_m2 * n_days) / 1e18 # From mg C to Pg C
-    ) %>%
+    mutate(lat_rad = latitude * pi / 180,
+           area_m2 = (R_EARTH^2) * (pi / 180)^2 * cos(lat_rad),
+           n_days = DAYS_IN_MONTH[month],
+           w_cell = (area_m2 * n_days) / 1e18) %>% # From mg C to Pg C
     pull(w_cell)
   
   preds_real_matrix <- exp(preds_log_matrix) # In mgC m-2 d-1
@@ -124,11 +120,9 @@ ui <- fluidPage(
            h5("Margaux Perhirin, Virginie Sonnet, Hervé Claustre, Jean-Olivier Irisson, Corentin Clerc, Simon Ramondenc, Lionel Guidi", style = "color: #5d83c2; margin-top: 0px;")
     ),
     column(5,
-           div(
-             style = "display: flex; justify-content: flex-end; align-items: center; gap: 15px;",
-             tags$img(src = "LogoDTO-BioflowPositivesmall.png", style = "max-height: 100px; max-width: 48%; object-fit: contain;"),
-             tags$img(src = "DUC7_newIcon.jpg", style = "max-height: 75px; max-width: 48%; object-fit: contain;")
-           )
+           div(style = "display: flex; justify-content: flex-end; align-items: center; gap: 15px;",
+               tags$img(src = "LogoDTO-BioflowPositivesmall.png", style = "max-height: 100px; max-width: 48%; object-fit: contain;"),
+               tags$img(src = "DUC7_newIcon.jpg", style = "max-height: 75px; max-width: 48%; object-fit: contain;"))
     )
   ),
   
@@ -164,13 +158,11 @@ ui <- fluidPage(
       tabsetPanel(
         # Tab 1: Global Flux + Carte
         tabPanel("Global POC Flux", icon = icon("globe"), br(),
-                 wellPanel(
-                   uiOutput("box_integrated_flux"),
-                   hr(),
-                   h4(textOutput("map_title")),
-                   h5(textOutput("map_subtitle"), class = "text-muted"),
-                   plotOutput("plot_map", height = "550px")
-                 )
+                 wellPanel(uiOutput("box_integrated_flux"),
+                           hr(),
+                           h4(textOutput("map_title")),
+                           h5(textOutput("map_subtitle"), class = "text-muted"),
+                           plotOutput("plot_map", height = "550px"))
         ),
         
         # Tab 2: PSD coefficients 
@@ -276,7 +268,7 @@ server <- function(input, output, session) {
         preds_log_matrix[, b] <- predict(MODEL_PACK$boot_models[[b]], df_target)
       }
       
-      sd_log   <- apply(preds_log_matrix, 1, sd)
+      sd_log <- apply(preds_log_matrix, 1, sd)
       mean_log <- apply(preds_log_matrix, 1, mean)
       psd_base$flux_sd <- exp(mean_log + sd_log) - exp(mean_log)
       

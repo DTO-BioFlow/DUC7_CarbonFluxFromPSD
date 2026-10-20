@@ -1,0 +1,41 @@
+configuration:
+  gpu:
+    enabled: false
+  containerImage:
+    imageIsBuilt: true
+    tag: docker.io/willemboone/bioflow_duc7
+    path: ""
+  network:
+    port: 3838
+metadata:
+  id: carbonfluxfrompsd
+  version: 1.0.0
+  description: predict and visualise POC flux from Particle Size Distribution
+    (PSD) data collected by the Underwater Vision Profiler (UVP)
+  icon: https://dto-bioflow.eu/sites/default/files/2025-05/Logo%20DTO-Bioflow%20Positive%20small.png
+  home: https://github.com/DTO-BioFlow/DUC7_CarbonFluxFromPSD
+  keywords: []
+  appVersion: ""
+git:
+  enabled: true
+  name: willem.boone
+  email: willem.boone@vliz.be
+  cache: "0"
+  token: 4nVzfua4d7o7r8wnyk2k
+  repository: ""
+  branch: ""
+serviceInputs: []
+resources:
+  requests:
+    cpu: 100m
+    memory: 1Gi
+  limits:
+    cpu: 1000m
+    memory: 4Gi
+resources_needed_by_your_service:
+  minimum_needs:
+    cpu: 100
+    memory: 1
+  maximum_needs:
+    cpu: 7200
+    memory: 28

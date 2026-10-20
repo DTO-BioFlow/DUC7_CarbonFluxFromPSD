@@ -3,7 +3,7 @@ configuration:
     enabled: false
   containerImage:
     imageIsBuilt: true
-    tag: docker.io/willemboone/bioflow_duc7
+    tag: docker.io/willemboone/bioflow_duc7:v1.1
     path: ""
   network:
     port: 3838

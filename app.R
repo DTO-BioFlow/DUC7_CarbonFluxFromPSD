@@ -12,6 +12,9 @@ library(readr)
 library(ggplot2)
 library(maps)
 
+# Use the same port for local and containerized launches.
+options(shiny.port = 3838)
+
 # Constants
 R_EARTH <- 6371000 # Earth radius in meters
 DAYS_IN_MONTH <- c(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)

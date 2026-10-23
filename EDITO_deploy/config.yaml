@@ -8,13 +8,14 @@ configuration:
   network:
     port: 3838
 metadata:
-  id: carbonfluxfrompsd
+  id: dto-bioflow-carbonflux
   version: 1.0.0
   description: predict and visualise POC flux from Particle Size Distribution
     (PSD) data collected by the Underwater Vision Profiler (UVP)
   icon: https://dto-bioflow.eu/sites/default/files/2025-05/Logo%20DTO-Bioflow%20Positive%20small.png
   home: https://github.com/DTO-BioFlow/DUC7_CarbonFluxFromPSD
-  keywords: []
+  keywords:
+    - keyword: DTO-Bioflow
   appVersion: ""
 git:
   enabled: true

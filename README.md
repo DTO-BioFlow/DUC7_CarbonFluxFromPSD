@@ -29,7 +29,6 @@ related to ecosystem services. More information is available at
 
    <img width="917" height="908" alt="shinyapp" src="https://github.com/user-attachments/assets/efa2ac74-aeae-4935-ab1a-92426739a39d" />
 
----
 
 ### Application User Guide
 
